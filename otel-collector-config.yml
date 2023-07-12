@@ -1,0 +1,17 @@
+receivers:
+  otlp/spanmetrics:
+    protocols:
+      grpc:
+        endpoint: "localhost:65535"
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+processors:
+  batch:
+  spanmetrics:
+    metrics_exporter: prometheus
+service:
+  pipelines:
+    metrics/spanmetrics:
+      receivers: [otlp/spanmetrics]
+      exporters: [prometheus]

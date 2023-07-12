@@ -1,0 +1,27 @@
+# docker-compose.yml file
+version: "3.5"
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+      - "9464:9464"
+  otel_collector:
+    networks:
+      - backend
+    image: otel/opentelemetry-collector-contrib:latest
+    volumes:
+      - "./otel-collector-config.yml:/etc/otelcol/otel-collector-config.yml"
+    command: --config /etc/otelcol/otel-collector-config.yml
+    ports:
+      - "14278:14278"
+  prometheus:
+    networks:
+      - backend
+    image: prom/prometheus:latest
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+networks:
+  backend:
